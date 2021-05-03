@@ -10,7 +10,7 @@ import Footer from './components/Footer';
 function App() {
 
   // setting the default url
-  axios.defaults.baseURL = `http://www.omdbapi.com/`
+  axios.defaults.baseURL = `https://www.omdbapi.com/`
 
   const [movies, setMovies] = useState({
     search:'',
