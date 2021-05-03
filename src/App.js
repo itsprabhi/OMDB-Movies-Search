@@ -1,23 +1,73 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from 'react'
+import axios from 'axios'
+
+//Components
+import SearchBar from './components/SearchBar';
+import SearchResults from './components/SearchResults';
+import Nominations from './components/Nominations';
+import Footer from './components/Footer';
 
 function App() {
+
+  // setting the default url
+  axios.defaults.baseURL = `http://www.omdbapi.com/`
+
+  const [movies, setMovies] = useState({
+    search:'',
+    searchResults:[],
+    nominations:[]
+  })
+
+
+
+  //seaching a movie
+  const searchMovies = (name) => {
+    const movieName = name
+    axios.get(`/?apikey=${process.env.REACT_APP_OMDB_API_KEY}&i=tt3896198&s=${movieName}&t=movie&r=json`)
+    .then(doc => {
+      console.log(doc.data)
+      setMovies({
+        ...movies,
+        searchResults: doc.data.Search,
+        search:name
+      })
+    })
+    .catch(err => {
+      console.log(err.response)
+    })
+  }
+
+  //adding the nomination
+  const addNomination = (Title) => {
+    const movieToAdd = movies.searchResults.find(ele => ele.Title === Title)
+    const nominationList = movies.nominations
+    nominationList.push(movieToAdd)
+    setMovies({
+      ...movies,
+      nominations:nominationList
+    })
+  }
+
+  //deleting the nomination
+  const deleteNomination = (Title) => {
+    const nominationList = movies.nominations
+    const newList = nominationList.filter(ele => ele.Title !== Title)
+    setMovies({
+      ...movies,
+      nominations:newList
+    })
+    console.log(movies.nominations)
+  }
+
   return (
+    
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <SearchBar searchMovies = {searchMovies} />
+      <div className = 'movies-section'>
+        <SearchResults movies = {movies.searchResults} nominations = {movies.nominations} addNomination = {addNomination} search = {movies.search} />
+        <Nominations nominations = {movies.nominations} deleteNomination = {deleteNomination} />
+      </div>
+      <Footer />
     </div>
   );
 }
