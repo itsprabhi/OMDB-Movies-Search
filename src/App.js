@@ -18,6 +18,7 @@ function App() {
     nominations:[]
   })
 
+  
 
 
   //seaching a movie
@@ -56,7 +57,6 @@ function App() {
       ...movies,
       nominations:newList
     })
-    console.log(movies.nominations)
   }
 
   return (
