@@ -153,3 +153,14 @@ footer{
     }
     margin: 40px auto;
 }
+
+@media (max-width:800px){
+    .movies-section{
+        display:block;
+        
+        > div{
+            width: 100%;
+            margin: 10px auto;
+        }
+    }
+}
